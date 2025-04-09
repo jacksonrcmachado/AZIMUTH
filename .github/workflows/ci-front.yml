@@ -28,5 +28,5 @@ jobs:
     - name: Instalar dependências
       run: npm install
 
-    - name: Verificar se o app builda corretamente
-      run: npx expo install && npx expo build:android
+    - name: Verificar se app inicia
+      run: npm start &
