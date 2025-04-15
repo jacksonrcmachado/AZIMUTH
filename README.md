@@ -23,7 +23,7 @@ git clone https://github.com/jacksonrcmachado/AZIMUTH.git
 
 Agora abra dois terminais diferentes e execute o frontend e o backend da aplicação.
 
-### frontend
+### Frontend
 
 2. Baixe as dependencias.
 
@@ -40,7 +40,7 @@ npm start
 
 4. Leia o QRCode que aparecera no terminal utilizando o aplicativo Expo Go.
 
-### backend
+### Backend
 
 2. Baixe as dependencias.
 
@@ -68,6 +68,20 @@ Confira abaixo a documentação completa do projeto, que inclui informações de
 ### Informações de Desenvolvimento
 
 > [Veja as informações sobre o desenvolvimento do projeto.](https://github.com/jacksonrcmachado/AZIMUTH/wiki/dev)
+
+<br>
+
+## Backlog Sprint 01
+<br>
+
+![Descrição da imagem](documentation/backlog-sprint01.png)
+
+<br>
+
+## Burndown Sprint 01
+<br>
+
+![Descrição da imagem](documentation/burndown-sprint01.png)
 
 <br>
 <hr>
