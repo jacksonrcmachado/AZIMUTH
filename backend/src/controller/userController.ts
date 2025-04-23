@@ -7,6 +7,8 @@ export class userController {
     private userModel = new UserModelClass()
 
     async createUser(user: IUser) {
+        console.log("controller: ", user);
+        
         return await this.userService.createUser(user);
     }
 

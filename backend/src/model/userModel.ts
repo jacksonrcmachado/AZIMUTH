@@ -24,6 +24,7 @@ export class UserModelClass {
   }
 
   async createUser(user: IUser) {
+    console.log("model: ", user);
     return await UserModel.create(user);
   }
 

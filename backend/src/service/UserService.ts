@@ -20,18 +20,25 @@ export class UserService {
   }
 
   async createUser(user: IUser) {
+    console.log("service: ", user);
+
     const verifyIfUserExists = await this.userModelClass.verifyUserByEmail(
       user.email
     );
+
+    console.log("Verify User: ", verifyIfUserExists);
+
     if (verifyIfUserExists) {
-      return `O usuário ${user.email} já existe!`;
+
+      console.log("Verify User ola seu viado: ");
+      
+      throw new Error(`O usuário ${user.email} já existe!`);
     }
 
     const hashedPassword = this.hashPassword(user.password);
+    console.log("Senha: ", hashedPassword);
     user.password = hashedPassword;
 
-    await this.userModelClass.createUser(user);
-
-    return true;
+    return await this.userModelClass.createUser(user);
   }
 }
