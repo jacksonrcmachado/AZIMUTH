@@ -2,7 +2,8 @@ import { ApolloServer } from "apollo-server-express";
 import { connectDB } from "../db/connect";
 
 import express from "express"; // Use import em vez de require
-import { resolvers, typeDefs } from "./graphql/schemas/schema";
+import { resolvers, typeDefs } from "./graphql/schema";
+import { getUserFromToken } from "./middlewares/auth";
 
 const app = express();
 
@@ -10,6 +11,11 @@ async function startServer() {
   const server = new ApolloServer({
     typeDefs,
     resolvers,
+    context: ({ req }) => {
+      const auth = req.headers.authorization;
+      const user = getUserFromToken(auth);
+      return { user };
+    }
   });
 
   await server.start();

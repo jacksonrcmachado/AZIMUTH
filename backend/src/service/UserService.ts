@@ -1,6 +1,6 @@
 import { IUser } from "../interfaces/IUser";
 import { UserModelClass } from "../model/userModel";
-import crypto, { randomBytes, scryptSync } from "node:crypto";
+import { randomBytes, scryptSync } from "node:crypto";
 
 export class UserService {
   private userModelClass: UserModelClass;
@@ -20,23 +20,17 @@ export class UserService {
   }
 
   async createUser(user: IUser) {
-    console.log("service: ", user);
-
     const verifyIfUserExists = await this.userModelClass.verifyUserByEmail(
       user.email
     );
 
-    console.log("Verify User: ", verifyIfUserExists);
-
     if (verifyIfUserExists) {
-
-      console.log("Verify User ola seu viado: ");
       
       throw new Error(`O usuário ${user.email} já existe!`);
     }
 
     const hashedPassword = this.hashPassword(user.password);
-    console.log("Senha: ", hashedPassword);
+
     user.password = hashedPassword;
 
     return await this.userModelClass.createUser(user);

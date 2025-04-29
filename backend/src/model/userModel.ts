@@ -24,11 +24,14 @@ export class UserModelClass {
   }
 
   async createUser(user: IUser) {
-    console.log("model: ", user);
     return await UserModel.create(user);
   }
 
   async getAllUsers() {
     return await UserModel.find({ isDeleted: false });
+  }
+
+  async getUserById(userId: string) {
+    return await UserModel.findById(userId);
   }
 }
