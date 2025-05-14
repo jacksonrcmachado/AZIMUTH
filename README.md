@@ -69,6 +69,10 @@ Confira abaixo a documentação completa do projeto, que inclui informações de
 
 > [Veja as informações sobre o desenvolvimento do projeto.](https://github.com/jacksonrcmachado/AZIMUTH/wiki/dev)
 
+### Melhorias e Adequações
+> [🧩 Possíveis Melhorias e Adequações para Atender o Cliente](documentation/MelhoriasCliente.md)
+
+
 <br>
 
 ## Backlog Sprint 01
