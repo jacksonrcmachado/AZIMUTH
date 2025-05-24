@@ -7,7 +7,7 @@ const styles = StyleSheet.create({
     },
     map: {
         backgroundColor: "#71CFFF",
-        height: 350,
+        height: 500,
     },
     filters: {
         backgroundColor: "#ddd",
