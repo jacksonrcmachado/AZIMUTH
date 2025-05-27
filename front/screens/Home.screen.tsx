@@ -1,45 +1,28 @@
 import DefaultPagesProps from '../types/DefaultPagesProps.type';
-import React, { useRef } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { View, Pressable, Image, ScrollView } from 'react-native';
 import styles from '../styles/screens/Home.styles';
 import Header from '../components/Header.component';
 import Buoy from '../components/Buoy.component';
 import MapView, { Marker } from 'react-native-maps';
 import BuoyProps from '../types/BuoyProps.type';
-
-const buoys = [
-    {
-        id: 1,
-        name: "Boia 1",
-        state: "active",
-        location: {
-            latitude: -23.561414,
-            longitude: -46.655881,
-        },
-    },
-    {
-        id: 2,
-        name: "Boia 2",
-        state: "maintenance",
-        location: {
-            latitude: -23.587416,
-            longitude: -46.657634,
-        },
-    },
-    {
-        id: 3,
-        name: "Boia 3",
-        state: "inactive",
-        location: {
-            latitude: -23.599112,
-            longitude: -46.719312,
-        },
-    },
-]
+import { useDispatch, useSelector } from "react-redux"
+import { AppDispatch, RootState } from "../store/store"
+import getBuoys from '../services/asyncThunk/getBuoys';
 
 export default function HomeScreen({ navigation }: DefaultPagesProps) {
-    const mapRef = useRef<MapView>(null);
+    const dispatch = useDispatch<AppDispatch>();
+    const {
+        buoys,
+        loading,
+        error
+    } = useSelector((state: RootState) => state.maps);
 
+    useEffect(() => {
+        dispatch(getBuoys())
+    }, [])
+
+    const mapRef = useRef<MapView>(null);
     function focusBuoy(buoy: BuoyProps) {
         mapRef.current?.animateToRegion({
             latitude: buoy.location.latitude,
@@ -79,7 +62,7 @@ export default function HomeScreen({ navigation }: DefaultPagesProps) {
                             key={buoy.id}
                             coordinate={buoy.location}
                             title={buoy.name}
-                            description={`Estado: ${buoy.state}`}
+                            description={`latitude: ${buoy.location.latitude}, longitude: ${buoy.location.longitude}`}
                             style={{ backgroundColor: "red" }}
                             icon={
                                 buoy.state === "active"
@@ -100,7 +83,7 @@ export default function HomeScreen({ navigation }: DefaultPagesProps) {
                 </View>
                 <ScrollView style={styles.buoys} contentContainerStyle={{ paddingBottom: 60 }}>
                     {buoys.map((buoy) => (
-                        <Buoy key={buoy.id} buoy={buoy} />
+                        <Buoy key={buoy.id} buoy={buoy} focus={focusBuoy} />
                     ))}
                 </ScrollView>
             </View>

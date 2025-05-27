@@ -2,8 +2,8 @@ import { Image, Pressable, Text, View } from "react-native";
 import styles from "../styles/components/Buoy.styles";
 import BuoyProps from "../types/BuoyProps.type";
 
-function Buoy(props: { buoy: BuoyProps }) {
-    const { buoy } = props;
+function Buoy(props: { buoy: BuoyProps, focus: (buoy: BuoyProps) => void }) {
+    const { buoy, focus } = props;
     return (
         <View style={styles.buoy}>
             <View style={styles.leftComponents}>
@@ -13,7 +13,7 @@ function Buoy(props: { buoy: BuoyProps }) {
                 <Text style={styles.name}>{buoy.name}</Text>
             </View>
             <View style={styles.rightComponents}>
-                <Pressable onPress={() => console.log("localizar boia")} style={styles.button}>
+                <Pressable onPress={() => focus(buoy)} style={styles.button}>
                     <Image source={require("../assets/location.png")} style={{ width: "100%", height: "100%" }} />
                 </Pressable>
                 <Pressable onPress={() => console.log("configurar boia")} style={styles.button}>
