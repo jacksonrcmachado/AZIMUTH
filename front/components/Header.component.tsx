@@ -1,17 +1,48 @@
-import { Image, Pressable, View } from "react-native";
+import { Button, Image, Pressable, Text, TouchableOpacity, View } from "react-native";
 import DefaultPagesProps from "../types/DefaultPagesProps.type";
 import styles from "../styles/components/Header.styles";
+import { useState } from "react";
 
-function Header({navigation}: DefaultPagesProps) {
+function Header({ navigation }: DefaultPagesProps) {
+    const [open, setOpen] = useState(false);
+
+    function toggleMenu() { setOpen(!open) }
+
+    function logout() {
+        // Função só pra exemplo
+        // Não utilizar essa função, faça no store junto com as coisas do login
+        console.log("Logout clicked");
+        navigation.replace("Login");
+    }
+
     return (
-        <View style={styles.header}>
-            <Pressable style={styles.logo} onPress={() => navigation.replace("Home")}>
-                <Image source={require("../assets/logo.png")} style={{ width: "100%", height: "50%" }}  />
-            </Pressable>
-            <View style={styles.buttons}>
-
+        <>
+            <View style={styles.header}>
+                <Pressable style={styles.logo} onPress={() => navigation.replace("Home")}>
+                    <Image source={require("../assets/logo.png")} style={{ width: "100%", height: "50%" }} />
+                </Pressable>
+                <Pressable style={styles.buttons} onPress={toggleMenu}>
+                    <View style={!open ? styles.line : styles.topLine} />
+                    <View style={!open ? styles.line : styles.midLine} />
+                    <View style={!open ? styles.line : styles.botLine} />
+                </Pressable>
+                {open && (
+                    <View style={styles.menu}>
+                        <View style={styles.menuContent}>
+                            <View style={styles.links}></View>
+                            <View style={styles.account}>
+                                <TouchableOpacity onPress={logout} style={styles.logoutButton}>
+                                    <Text style={styles.logoutText}>Sair</Text>
+                                </TouchableOpacity>
+                            </View>
+                        </View>
+                    </View>
+                )}
             </View>
-        </View>
+            {open && (
+                <Pressable style={styles.overlay} onPress={() => setOpen(false)} />
+            )}
+        </>
     )
 }
 

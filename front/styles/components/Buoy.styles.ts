@@ -2,7 +2,7 @@ import { StyleSheet } from 'react-native';
 
 const styles = StyleSheet.create({
     buoy: {
-        backgroundColor: "#F4F4F4",
+        backgroundColor: "#fff",
         borderColor: "#C0C0C0",
         borderWidth: 1,
         borderBottomWidth: 2,
