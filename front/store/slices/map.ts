@@ -1,15 +1,15 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit"
 import getBuoys from "../../services/asyncThunk/getBuoys"
-import BuoyProps from "../../types/BuoyProps.type"
+import LocationData from "../../types/LocationData.type"
 
 interface MapState {
-    buoys: BuoyProps[]
+    locations: LocationData[]
     loading: boolean
     error: string | null
 }
 
 const initialState: MapState = {
-    buoys: [],
+    locations: [],
     loading: true,
     error: null
 }
@@ -26,12 +26,12 @@ const mapSlice = createSlice({
             state.error = null
         }),
         builder.addCase(getBuoys.fulfilled, (state, action: PayloadAction<any[]>) => {
-            state.buoys = action.payload
+            state.locations = action.payload
             state.loading = false
             state.error = null
         }),
         builder.addCase(getBuoys.rejected, (state) => {
-            state.buoys = []
+            state.locations = []
             state.loading = false
             state.error = "Error fetching buoys"
         })

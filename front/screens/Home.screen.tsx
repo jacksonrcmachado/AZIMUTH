@@ -5,15 +5,16 @@ import styles from '../styles/screens/Home.styles';
 import Header from '../components/Header.component';
 import Buoy from '../components/Buoy.component';
 import MapView, { Marker } from 'react-native-maps';
-import BuoyProps from '../types/BuoyProps.type';
+import BuoyProps from '../types/Buoy.type';
 import { useDispatch, useSelector } from "react-redux"
 import { AppDispatch, RootState } from "../store/store"
 import getBuoys from '../services/asyncThunk/getBuoys';
+import LocationData from '../types/LocationData.type';
 
 export default function HomeScreen({ navigation }: DefaultPagesProps) {
     const dispatch = useDispatch<AppDispatch>();
     const {
-        buoys,
+        locations,
         loading,
         error
     } = useSelector((state: RootState) => state.maps);
@@ -23,10 +24,10 @@ export default function HomeScreen({ navigation }: DefaultPagesProps) {
     }, [])
 
     const mapRef = useRef<MapView>(null);
-    function focusBuoy(buoy: BuoyProps) {
+    function focusBuoy(buoy: LocationData) {
         mapRef.current?.animateToRegion({
-            latitude: buoy.location.latitude,
-            longitude: buoy.location.longitude,
+            latitude: buoy.latitude,
+            longitude: buoy.longitude,
             latitudeDelta: 0.005,
             longitudeDelta: 0.005,
         }, 1000)
@@ -57,21 +58,17 @@ export default function HomeScreen({ navigation }: DefaultPagesProps) {
                         },
                     ]}
                 >
-                    {buoys.map((buoy) => (
+                    {locations.map((location) => (
                         <Marker
-                            key={buoy.id}
-                            coordinate={buoy.location}
-                            title={buoy.name}
-                            description={`latitude: ${buoy.location.latitude}, longitude: ${buoy.location.longitude}`}
+                            key={location.buoy.id}
+                            coordinate={location}
+                            title={location.buoy.name}
+                            description={`latitude: ${location.latitude}, longitude: ${location.longitude}`}
                             style={{ backgroundColor: "red" }}
                             icon={
-                                buoy.state === "active"
-                                    ? require("../assets/ativo.png")
-                                    : buoy.state === "maintenance"
-                                        ? require("../assets/manutencao.png")
-                                        : require("../assets/inativo.png")
+                                !location.buoy.isDeleted ? require("../assets/ativo.png") : require("../assets/inativo.png")
                             }
-                            onPress={() => focusBuoy(buoy)}
+                            onPress={() => focusBuoy(location)}
                         >
                         </Marker>
                     ))}
@@ -82,8 +79,8 @@ export default function HomeScreen({ navigation }: DefaultPagesProps) {
                     </Pressable>
                 </View>
                 <ScrollView style={styles.buoys} contentContainerStyle={{ paddingBottom: 60 }}>
-                    {buoys.map((buoy) => (
-                        <Buoy key={buoy.id} buoy={buoy} focus={focusBuoy} />
+                    {locations.map((location) => (
+                        <Buoy key={location.buoy.id} locationData={location} focus={focusBuoy} />
                     ))}
                 </ScrollView>
             </View>

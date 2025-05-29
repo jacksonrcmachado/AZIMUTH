@@ -1,37 +1,30 @@
-import BuoyProps from "../types/BuoyProps.type";
+import LocationData from "../types/LocationData.type";
 
 class BackendConnection {
     private static url: string = "";
 
-    public static getBuoys(): BuoyProps[] {
-        const response: BuoyProps[] = [
+    public static getBuoys(): LocationData[] {
+        const response: LocationData[] = [
             {
-                id: 1,
-                name: "Boia 1",
-                state: "active",
-                location: {
-                    latitude: -23.561414,
-                    longitude: -46.655881,
-                },
+                latitude: -23.55052,
+                longitude: -46.633308,
+                buoy: {
+                    id: 1,
+                    name: "Buoy 1",
+                    description: "Essa é a primeira boia.",
+                    isDeleted: false
+                }
             },
             {
-                id: 2,
-                name: "Boia 2",
-                state: "maintenance",
-                location: {
-                    latitude: -23.587416,
-                    longitude: -46.657634,
-                },
-            },
-            {
-                id: 3,
-                name: "Boia 3",
-                state: "inactive",
-                location: {
-                    latitude: -23.599112,
-                    longitude: -46.719312,
-                },
-            },
+                latitude: -23.55152,
+                longitude: -46.634308,
+                buoy: {
+                    id: 2,
+                    name: "Buoy 2",
+                    description: "Essa é a segunda boia.",
+                    isDeleted: true
+                }
+            }
         ]
         return response;
     }
