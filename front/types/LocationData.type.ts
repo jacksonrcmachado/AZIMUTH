@@ -1,9 +1,10 @@
-import BuoyProps from "./Buoy.type";
+import Buoy from "./Buoy.type";
 
 type LocationData = {
     latitude: number;
     longitude: number;
-    buoy: BuoyProps;
+    buoy: Buoy;
+    createAt: string;
 }
 
 export default LocationData;

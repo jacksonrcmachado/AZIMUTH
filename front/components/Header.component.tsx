@@ -29,7 +29,14 @@ function Header({ navigation }: DefaultPagesProps) {
                 {open && (
                     <View style={styles.menu}>
                         <View style={styles.menuContent}>
-                            <View style={styles.links}></View>
+                            <View style={styles.links}>
+                                 <TouchableOpacity onPress={() => navigation.replace("Home")} style={styles.link}>
+                                    <Text style={styles.linkText}>Mapa</Text>
+                                </TouchableOpacity>
+                                <TouchableOpacity onPress={() => navigation.replace("Report")} style={styles.link}>
+                                    <Text style={styles.linkText}>Relatórios</Text>
+                                </TouchableOpacity>
+                            </View>
                             <View style={styles.account}>
                                 <TouchableOpacity onPress={logout} style={styles.logoutButton}>
                                     <Text style={styles.logoutText}>Sair</Text>

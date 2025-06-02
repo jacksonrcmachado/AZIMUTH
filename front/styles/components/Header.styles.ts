@@ -72,10 +72,22 @@ const styles = StyleSheet.create({
         marginRight: 20,
         marginBottom: 20,
     },
-    links: { // adicionar display flex quando tiver os links
-        // backgroundColor: "red",
+    links: {
         height: 230,
         width: "100%",
+    },
+    link: {
+        marginTop: 20,
+        width: "100%",
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "flex-start",
+    },
+    linkText: {
+        fontFamily: "Inter",
+        fontSize: 16,
+        color: "#243149",
+        fontWeight: "bold",
     },
     account: {
         height: 70,
@@ -92,6 +104,7 @@ const styles = StyleSheet.create({
         width: 80,
     },
     logoutText: {
+        fontFamily: "Inter",
         fontSize: 16,
         color: "red",
         fontWeight: "bold",

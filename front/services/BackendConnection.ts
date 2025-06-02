@@ -13,17 +13,8 @@ class BackendConnection {
                     name: "Buoy 1",
                     description: "Essa é a primeira boia.",
                     isDeleted: false
-                }
-            },
-            {
-                latitude: -23.55152,
-                longitude: -46.634308,
-                buoy: {
-                    id: 2,
-                    name: "Buoy 2",
-                    description: "Essa é a segunda boia.",
-                    isDeleted: true
-                }
+                },
+                createAt: new Date().toISOString()
             }
         ]
         return response;
