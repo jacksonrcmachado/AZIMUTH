@@ -2,7 +2,7 @@ import { StyleSheet } from 'react-native';
 
 const styles = StyleSheet.create({
     buoy: {
-        backgroundColor: "#F4F4F4",
+        backgroundColor: "#fff",
         borderColor: "#C0C0C0",
         borderWidth: 1,
         borderBottomWidth: 2,
@@ -26,7 +26,7 @@ const styles = StyleSheet.create({
         height: 16,
         backgroundColor: "#FF0000",
         borderColor: "#BD0000",
-        borderWidth: 2,
+        borderWidth: 1,
         borderRadius: 100,
     },
     GreenAlert: {
@@ -34,19 +34,21 @@ const styles = StyleSheet.create({
         height: 16,
         backgroundColor: "#00FF00",
         borderColor: "#00BD00",
-        borderWidth: 2,
+        borderWidth: 1,
         borderRadius: 100,
     },
     yellowAlert: {
         width: 16,
         height: 16,
-        backgroundColor: "#FFFF00",
-        borderColor: "#BDBD00",
-        borderWidth: 2,
+        backgroundColor: "#FFAA00",
+        borderColor: "#BD8A00",
+        borderWidth: 1,
         borderRadius: 100,
     },
     name: {
-
+        fontSize: 14,
+        fontWeight: "bold",
+        color: "#000000",
     },
     rightComponents: {
         display: "flex",

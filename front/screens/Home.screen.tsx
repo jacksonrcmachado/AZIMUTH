@@ -1,49 +1,41 @@
 import DefaultPagesProps from '../types/DefaultPagesProps.type';
-import React, { useRef } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { View, Pressable, Image, ScrollView } from 'react-native';
 import styles from '../styles/screens/Home.styles';
 import Header from '../components/Header.component';
-import Buoy from '../components/Buoy.component';
-import MapView, { Marker } from 'react-native-maps';
-import BuoyProps from '../types/BuoyProps.type';
-
-const buoys = [
-    {
-        id: 1,
-        name: "Boia 1",
-        state: "active",
-        location: {
-            latitude: -23.561414,
-            longitude: -46.655881,
-        },
-    },
-    {
-        id: 2,
-        name: "Boia 2",
-        state: "maintenance",
-        location: {
-            latitude: -23.587416,
-            longitude: -46.657634,
-        },
-    },
-    {
-        id: 3,
-        name: "Boia 3",
-        state: "inactive",
-        location: {
-            latitude: -23.599112,
-            longitude: -46.719312,
-        },
-    },
-]
+import BuoyComponent from '../components/Buoy.component';
+import MapView, { Marker, Polyline } from 'react-native-maps';
+import { useDispatch, useSelector } from "react-redux"
+import { AppDispatch, RootState } from "../store/store"
+import getBuoys from '../services/asyncThunk/getBuoys';
+import LocationData from '../types/LocationData.type';
 
 export default function HomeScreen({ navigation }: DefaultPagesProps) {
-    const mapRef = useRef<MapView>(null);
+    const dispatch = useDispatch<AppDispatch>();
+    const {
+        locations,
+        loading,
+        error
+    } = useSelector((state: RootState) => state.maps);
 
-    function focusBuoy(buoy: BuoyProps) {
+    const linha = [
+        { latitude: -23.55052, longitude: -46.633308 },
+        { latitude: -23.55152, longitude: -46.634308 },
+        { latitude: -23.55252, longitude: -46.635008 },
+        { latitude: -23.55352, longitude: -46.636308 },
+        { latitude: -23.55452, longitude: -46.638008 },
+        { latitude: -23.55552, longitude: -46.639308 }
+    ];
+
+    useEffect(() => {
+        dispatch(getBuoys())
+    }, [])
+
+    const mapRef = useRef<MapView>(null);
+    function focusBuoy(buoy: LocationData) {
         mapRef.current?.animateToRegion({
-            latitude: buoy.location.latitude,
-            longitude: buoy.location.longitude,
+            latitude: buoy.latitude,
+            longitude: buoy.longitude,
             latitudeDelta: 0.005,
             longitudeDelta: 0.005,
         }, 1000)
@@ -74,33 +66,29 @@ export default function HomeScreen({ navigation }: DefaultPagesProps) {
                         },
                     ]}
                 >
-                    {buoys.map((buoy) => (
+                    {locations.map((location) => (
                         <Marker
-                            key={buoy.id}
-                            coordinate={buoy.location}
-                            title={buoy.name}
-                            description={`Estado: ${buoy.state}`}
-                            style={{ backgroundColor: "red" }}
+                            key={location.buoy.id}
+                            coordinate={location}
+                            title={location.buoy.name}
+                            description={location.buoy.description}
+                            style={{ zIndex: 2, opacity: !location.buoy.isDeleted ? 1 : 0.5 }}
                             icon={
-                                buoy.state === "active"
-                                    ? require("../assets/ativo.png")
-                                    : buoy.state === "maintenance"
-                                        ? require("../assets/manutencao.png")
-                                        : require("../assets/inativo.png")
+                                !location.buoy.isDeleted ? require("../assets/ativo.png") : require("../assets/inativo.png")
                             }
-                            onPress={() => focusBuoy(buoy)}
+                            onPress={() => focusBuoy(location)}
                         >
                         </Marker>
                     ))}
                 </MapView>
                 <View style={styles.filters}>
-                    <Pressable onPress={() => console.log("adicionar boia")} style={styles.add}>
+                    <Pressable onPress={() => console.log("adicionar boia")} style={({ pressed }) => [styles.add, { opacity: pressed ? 0.6 : 1 }]}>
                         <Image source={require("../assets/add.png")} style={{ width: "100%", height: "100%" }} />
                     </Pressable>
                 </View>
                 <ScrollView style={styles.buoys} contentContainerStyle={{ paddingBottom: 60 }}>
-                    {buoys.map((buoy) => (
-                        <Buoy key={buoy.id} buoy={buoy} />
+                    {locations.map((location) => (
+                        <BuoyComponent key={location.buoy.id} navigation={navigation} locationData={location} focus={focusBuoy} />
                     ))}
                 </ScrollView>
             </View>

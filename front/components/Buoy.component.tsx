@@ -1,26 +1,21 @@
 import { Image, Pressable, Text, View } from "react-native";
 import styles from "../styles/components/Buoy.styles";
-import BuoyProps from "../types/BuoyProps.type";
+import LocationData from "../types/LocationData.type";
 
-function Buoy(props: { buoy: BuoyProps }) {
-    const { buoy } = props;
+function Buoy(props: { navigation: any, locationData: LocationData, focus: (buoy: LocationData) => void }) {
+    const { navigation, locationData, focus } = props;
     return (
-        <View style={styles.buoy}>
+        <Pressable style={({ pressed }) => [styles.buoy, { opacity: pressed ? 0.6 : 1 }]} onPress={() => focus(locationData)} onLongPress={() => navigation.navigate("ConfigBuoy", { locationData })}>
             <View style={styles.leftComponents}>
-                {buoy.state === "active" ? <View style={styles.GreenAlert} /> : null}
-                {buoy.state === "maintenance" ? <View style={styles.yellowAlert} /> : null}
-                {buoy.state === "inactive" ? <View style={styles.redAlert} /> : null}
-                <Text style={styles.name}>{buoy.name}</Text>
+                {!locationData.buoy.isDeleted ? <View style={styles.GreenAlert} /> : <View style={styles.redAlert} />}
+                <Text style={styles.name}>{locationData.buoy.name}</Text>
             </View>
             <View style={styles.rightComponents}>
-                <Pressable onPress={() => console.log("localizar boia")} style={styles.button}>
-                    <Image source={require("../assets/location.png")} style={{ width: "100%", height: "100%" }} />
-                </Pressable>
-                <Pressable onPress={() => console.log("configurar boia")} style={styles.button}>
+                <Pressable onPress={() => navigation.navigate("ConfigBuoy", { locationData })} style={styles.button}>
                     <Image source={require("../assets/config.png")} style={{ width: "100%", height: "100%" }} />
                 </Pressable>
             </View>
-        </View>
+        </Pressable>
     )
 }
 
