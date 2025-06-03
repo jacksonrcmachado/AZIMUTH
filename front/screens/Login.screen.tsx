@@ -16,6 +16,7 @@ import {
 import { useEffect } from 'react';
 import { Ionicons } from '@expo/vector-icons';
 import { useLogin } from '../utils/users/useLogin';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function Login({ navigation }: { navigation: any }) {
   const [showPassword, setShowPassword] = useState(false);
@@ -35,15 +36,19 @@ export default function Login({ navigation }: { navigation: any }) {
 
       if (!result) return; // erro já tratado
 
-      // Aqui você pode salvar o token no AsyncStorage ou Contexto
-      // await AsyncStorage.setItem('token', result.token);
+      // ✅ Salvando o token:
+      await AsyncStorage.setItem("token", result.token);
+      const token = await AsyncStorage.getItem("token");
+      console.log("Token salvo:", token);
 
+      
       navigation.replace("Home");
     } catch (error) {
       console.error("Erro ao fazer login:", error);
       alert("Erro ao fazer login");
     }
   };
+  
 
   useEffect(() => {
     Animated.loop(
