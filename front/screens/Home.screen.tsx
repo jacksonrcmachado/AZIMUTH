@@ -1,6 +1,6 @@
 import DefaultPagesProps from '../types/DefaultPagesProps.type';
 import React, { useEffect, useRef } from 'react';
-import { View, Pressable, Image, ScrollView } from 'react-native';
+import { View, Pressable, Image, ScrollView, Text } from 'react-native';
 import styles from '../styles/screens/Home.styles';
 import Header from '../components/Header.component';
 import BuoyComponent from '../components/Buoy.component';
@@ -9,23 +9,25 @@ import { useDispatch, useSelector } from "react-redux"
 import { AppDispatch, RootState } from "../store/store"
 import getBuoys from '../services/asyncThunk/getBuoys';
 import LocationData from '../types/LocationData.type';
+import getLocationHistory from '../services/asyncThunk/getLocationHistory';
+import { clearHistory } from '../store/slices/map';
 
 export default function HomeScreen({ navigation }: DefaultPagesProps) {
     const dispatch = useDispatch<AppDispatch>();
     const {
         locations,
+        locationsHistory,
         loading,
         error
     } = useSelector((state: RootState) => state.maps);
 
-    const linha = [
+    const lines = [
         { latitude: -23.55052, longitude: -46.633308 },
-        { latitude: -23.55152, longitude: -46.634308 },
-        { latitude: -23.55252, longitude: -46.635008 },
-        { latitude: -23.55352, longitude: -46.636308 },
-        { latitude: -23.55452, longitude: -46.638008 },
-        { latitude: -23.55552, longitude: -46.639308 }
-    ];
+        { latitude: -23.55052, longitude: -46.633308 + 0.01 },
+        { latitude: -23.55052 + 0.01, longitude: -46.633308 + 0.01 },
+        { latitude: -23.55052 + 0.01, longitude: -46.633308 },
+        { latitude: -23.55052, longitude: -46.633308 }
+    ]
 
     useEffect(() => {
         dispatch(getBuoys())
@@ -39,6 +41,9 @@ export default function HomeScreen({ navigation }: DefaultPagesProps) {
             latitudeDelta: 0.005,
             longitudeDelta: 0.005,
         }, 1000)
+        const startDate = new Date().toUTCString();
+        const endDate = new Date().toUTCString(); // Colocar depois com o filtro
+        dispatch(getLocationHistory({ buoyId: buoy.buoy.id, startDate, endDate }));
     }
 
     return (
@@ -80,8 +85,18 @@ export default function HomeScreen({ navigation }: DefaultPagesProps) {
                         >
                         </Marker>
                     ))}
+                    {locationsHistory && (
+                        <Polyline
+                            coordinates={locationsHistory}
+                            strokeColor="red"
+                            strokeWidth={2}
+                        />
+                    )}
                 </MapView>
                 <View style={styles.filters}>
+                    <Pressable onPress={() => dispatch(clearHistory())} style={({ pressed }) => [styles.clearHistory, { opacity: pressed ? 0.6 : 1 }]}>
+                        <Text style={styles.clearHistoryText}>Limpar</Text>
+                    </Pressable>
                     <Pressable onPress={() => console.log("adicionar boia")} style={({ pressed }) => [styles.add, { opacity: pressed ? 0.6 : 1 }]}>
                         <Image source={require("../assets/add.png")} style={{ width: "100%", height: "100%" }} />
                     </Pressable>
