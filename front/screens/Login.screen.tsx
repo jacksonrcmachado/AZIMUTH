@@ -15,11 +15,35 @@ import {
 } from 'react-native';
 import { useEffect } from 'react';
 import { Ionicons } from '@expo/vector-icons';
+import { useLogin } from '../utils/users/useLogin';
 
 export default function Login({ navigation }: { navigation: any }) {
   const [showPassword, setShowPassword] = useState(false);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
 
   const floatAnim = useState(new Animated.Value(0))[0];
+
+  const handleLogin = async () => {
+    if (!email || !password) {
+      alert("Por favor, preencha todos os campos.");
+      return;
+    }
+
+    try {
+      const result = await useLogin(email, password);
+
+      if (!result) return; // erro já tratado
+
+      // Aqui você pode salvar o token no AsyncStorage ou Contexto
+      // await AsyncStorage.setItem('token', result.token);
+
+      navigation.replace("Home");
+    } catch (error) {
+      console.error("Erro ao fazer login:", error);
+      alert("Erro ao fazer login");
+    }
+  };
 
   useEffect(() => {
     Animated.loop(
@@ -42,12 +66,12 @@ export default function Login({ navigation }: { navigation: any }) {
 
   return (
     <ImageBackground
-      source={require('../assets/fundo.png')}
+      source={require("../assets/fundo.png")}
       style={styles.background}
     >
       <SafeAreaView style={styles.safeArea}>
         <KeyboardAvoidingView
-          behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+          behavior={Platform.OS === "ios" ? "padding" : "height"}
           style={{ flex: 1 }}
         >
           <ScrollView
@@ -55,7 +79,7 @@ export default function Login({ navigation }: { navigation: any }) {
             keyboardShouldPersistTaps="handled"
           >
             <Animated.Image
-              source={require('../assets/logo-azimuth.png')}
+              source={require("../assets/logo-azimuth.png")}
               style={[styles.logo, { transform: [{ translateY: floatAnim }] }]}
             />
             <Text style={styles.title}>Azimuth</Text>
@@ -67,6 +91,8 @@ export default function Login({ navigation }: { navigation: any }) {
               <TextInput
                 placeholder="exemplo@gmail.com"
                 style={styles.input}
+                value={email}
+                onChangeText={setEmail}
                 keyboardType="email-address"
               />
 
@@ -75,25 +101,30 @@ export default function Login({ navigation }: { navigation: any }) {
                   placeholder="*******"
                   style={styles.input}
                   secureTextEntry={!showPassword}
+                  value={password}
+                  onChangeText={setPassword}
                 />
                 <TouchableOpacity
                   style={styles.eyeButton}
                   onPress={() => setShowPassword(!showPassword)}
                 >
-                  <Ionicons name={showPassword ? "eye" : "eye-off"} size={24} color="gray" />
+                  <Ionicons
+                    name={showPassword ? "eye" : "eye-off"}
+                    size={24}
+                    color="gray"
+                  />
                 </TouchableOpacity>
               </View>
 
-              <TouchableOpacity
-                style={styles.button}
-                onPress={() => navigation.replace('Home')}
-              >
+              <TouchableOpacity style={styles.button} onPress={handleLogin}>
                 <Text style={styles.buttonText}>Entrar</Text>
               </TouchableOpacity>
 
               <View style={styles.signupRow}>
                 <Text style={styles.grayText}>Não possui uma conta? </Text>
-                <TouchableOpacity onPress={() => navigation.navigate('Cadastro')}>
+                <TouchableOpacity
+                  onPress={() => navigation.navigate("Cadastro")}
+                >
                   <Text style={styles.link}>Cadastre-se</Text>
                 </TouchableOpacity>
               </View>
