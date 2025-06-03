@@ -1,5 +1,5 @@
 import DefaultPagesProps from '../types/DefaultPagesProps.type';
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { View, Pressable, Image, ScrollView } from 'react-native';
 import styles from '../styles/screens/Home.styles';
 import Header from '../components/Header.component';
@@ -9,8 +9,10 @@ import { useDispatch, useSelector } from "react-redux"
 import { AppDispatch, RootState } from "../store/store"
 import getBuoys from '../services/asyncThunk/getBuoys';
 import LocationData from '../types/LocationData.type';
+import AddBuoyModal from '../components/AddBuoyModal.component';
 
 export default function HomeScreen({ navigation }: DefaultPagesProps) {
+    const [isModalVisible, setIsModalVisible] = useState(false);
     const dispatch = useDispatch<AppDispatch>();
     const {
         locations,
@@ -43,6 +45,7 @@ export default function HomeScreen({ navigation }: DefaultPagesProps) {
 
     return (
         <>
+            <AddBuoyModal visible={isModalVisible} onClose={() => setIsModalVisible(false)} />
             <Header navigation={navigation} />
             <View style={styles.main}>
                 <MapView
@@ -82,7 +85,7 @@ export default function HomeScreen({ navigation }: DefaultPagesProps) {
                     ))}
                 </MapView>
                 <View style={styles.filters}>
-                    <Pressable onPress={() => console.log("adicionar boia")} style={({ pressed }) => [styles.add, { opacity: pressed ? 0.6 : 1 }]}>
+                    <Pressable onPress={() => setIsModalVisible(true)} style={({ pressed }) => [styles.add, { opacity: pressed ? 0.6 : 1 }]}>
                         <Image source={require("../assets/add.png")} style={{ width: "100%", height: "100%" }} />
                     </Pressable>
                 </View>
