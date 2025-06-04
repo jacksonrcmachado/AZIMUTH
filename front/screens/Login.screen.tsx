@@ -39,8 +39,6 @@ export default function Login({ navigation }: { navigation: any }) {
       // ✅ Salvando o token:
       await AsyncStorage.setItem("token", result.token);
       const token = await AsyncStorage.getItem("token");
-      console.log("Token salvo:", token);
-
       
       navigation.replace("Home");
     } catch (error) {
