@@ -41,8 +41,8 @@ export default function HomeScreen({ navigation }: DefaultPagesProps) {
             latitudeDelta: 0.005,
             longitudeDelta: 0.005,
         }, 1000)
-        const startDate = new Date().toUTCString();
-        const endDate = new Date().toUTCString(); // Colocar depois com o filtro
+        const startDate = new Date().toUTCString(); // Colocar depois com o filtro
+        const endDate = new Date().toUTCString(); 
         dispatch(getLocationHistory({ buoyId: buoy.buoy.id, startDate, endDate }));
     }
 

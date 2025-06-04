@@ -1,7 +1,13 @@
-import LocationData from "../types/LocationData.type";
+import GpsData from "../types/backendResponses/GpsData";
 
-function sortByBuoyDate(data: LocationData[]): LocationData[] {
-  return data.slice().sort((a, b) => new Date(a.createAt).getTime() - new Date(b.createAt).getTime());
+function sortByBuoyDate(data: GpsData[]): GpsData[] {
+    const sortedData = data.sort((a, b) => {
+        const dateA = new Date(a.timestamp).getTime();
+        const dateB = new Date(b.timestamp).getTime();
+        return dateA - dateB;
+    });
+
+    return sortedData;
 }
 
 export default sortByBuoyDate;
