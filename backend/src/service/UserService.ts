@@ -25,7 +25,6 @@ export class UserService {
     );
 
     if (verifyIfUserExists) {
-      
       throw new Error(`O usuário ${user.email} já existe!`);
     }
 
@@ -34,5 +33,17 @@ export class UserService {
     user.password = hashedPassword;
 
     return await this.userModelClass.createUser(user);
+  }
+
+  async getAllUsers() {
+    return await this.userModelClass.getAllUsers();
+  }
+
+  async updateUser(UserId: string, updateUser: Partial<IUser>) {
+    if (updateUser.password) {
+      const hashedPassword = this.hashPassword(updateUser.password);
+      updateUser.password = hashedPassword;
+    }
+    return await this.userModelClass.updateUser(UserId, updateUser);
   }
 }

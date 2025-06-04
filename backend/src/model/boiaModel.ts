@@ -4,6 +4,7 @@ const boiaSchema = new mongoose.Schema(
   {
     name: { type: String, required: true },
     description: { type: String },
+    frequencyAtTime: { type: Number, default: 60000 },
     isDeleted: {
       type: Boolean,
       default: false,
@@ -23,8 +24,12 @@ const boiaSchema = new mongoose.Schema(
 export const BoiaModel = mongoose.model("Boia", boiaSchema);
 
 export class BoiaModelClass {
-  async createBoia(name: string, description: string) {
-    return await BoiaModel.create({ name: name, description: description });
+  async createBoia(
+    name: string,
+    description: string,
+    frequencyAtTime?: number
+  ) {
+    return await BoiaModel.create({ name, description, frequencyAtTime });
   }
 
   async getAllBoias() {
@@ -41,8 +46,13 @@ export class BoiaModelClass {
 
   async updateBoia(
     boiaId: string,
-    updateData: Partial<{ name: string; description: string }>
+    updateData: Partial<{
+      name: string;
+      description: string;
+      frequencyAtTime: number;
+    }>
   ) {
     return await BoiaModel.findByIdAndUpdate(boiaId, updateData, { new: true });
   }
+
 }

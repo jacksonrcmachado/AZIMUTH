@@ -1,15 +1,15 @@
 import { gql } from "apollo-server";
-import { userController } from "../controller/userController";
 import { LoginService } from "../service/LoginService";
 import { BoiaService } from "../service/BoiaService";
 import { GPSModelClass } from "../model/GPSModel";
 import { BoiaModelClass } from "../model/boiaModel";
+import { UserService } from "../service/UserService";
 
-const UserController = new userController();
+const userService = new UserService();
 const loginService = new LoginService();
 const boiaService = new BoiaService();
+const GPSModel = new GPSModelClass();
 const boiaModel = new BoiaModelClass();
-const GPS = new GPSModelClass();
 
 export const typeDefs = gql`
   type User {
@@ -35,14 +35,20 @@ export const typeDefs = gql`
     _id: ID!
     name: String!
     description: String!
+    frequencyAtTime: Float
     gpsData: [GPSData]
   }
 
   type Query {
+    # Usuários
     getAllUsers: [User]
     me: User
+
+    # Boias
     getGPSDataByBoia(boiaId: String!): [GPSData]
     getAllBoias: [Boia]
+
+    # GPS
     getGPSDataByBoiaInRange(
       boiaId: String!
       startDate: String!
@@ -51,9 +57,12 @@ export const typeDefs = gql`
   }
 
   type Mutation {
+    # Usuários
     createUser(name: String, email: String, password: String): User
+    updateUser(userId: String!, name: String, email: String, password: String): User
     login(email: String!, password: String!): AuthPayload!
 
+    # GPS
     sendGPSData(
       boiaId: String!
       latitude: Float!
@@ -61,33 +70,46 @@ export const typeDefs = gql`
       timestamp: String!
     ): GPSData
 
-    createBoia(name: String!, description: String!): Boia!
-    updateBoia(boiaId: String!, name: String, description: String): Boia!
+    # Boias
+    createBoia(
+      name: String!
+      description: String!
+      frequencyAtTime: Float
+    ): Boia!
+    updateBoia(
+      boiaId: String!
+      name: String
+      description: String
+      frequencyAtTime: Float
+    ): Boia!
   }
 `;
 
 export const resolvers = {
   Query: {
-    getAllUsers: async () => UserController.getAllUsers(),
+    //? Usuários
+    getAllUsers: async () => userService.getAllUsers(),
 
     me: (_: any, __: any, context: any) => {
       if (!context.user) throw new Error("Não Autenticado");
       return loginService.getMe(context.user._id);
     },
 
+    //? Boias
     getAllBoias: async (_: any, __: any) => {
       return await boiaModel.getAllBoias();
     },
 
     getGPSDataByBoia: async (_: any, args: { boiaId: string }) => {
-      return await GPS.getGPSDataByBoiaId(args.boiaId);
+      return await GPSModel.getGPSDataByBoiaId(args.boiaId);
     },
 
+    //? GPS
     getGPSDataByBoiaInRange: async (
       _: any,
       args: { boiaId: string; startDate: string; endDate: string }
     ) => {
-      return await GPS.getGPSDataByBoiaIdAndDateRange(
+      return await GPSModel.getGPSDataByBoiaIdAndDateRange(
         args.boiaId,
         args.startDate,
         args.endDate
@@ -95,6 +117,7 @@ export const resolvers = {
     },
   },
   Mutation: {
+    //? Usuários
     createUser: async (
       _: any,
       {
@@ -105,17 +128,19 @@ export const resolvers = {
     ) => {
       // Criando o usuário com os dados passados
       const user = { name, email, password };
-      return UserController.createUser(user);
+      return userService.createUser(user);
     },
-
-    // login: async (_: any, args: any) => {
-    //   try {
-    //     return await loginService.login(args.email, args.password);
-    //   } catch (error: any) {
-    //     console.error("Error no login: ", error);
-    //     throw new Error(error.message || "Erro ao fazer o login!");
-    //   }
-    // },
+    updateUser: async (
+      _: any,
+      {
+        userId,
+        name,
+        email,
+        password,
+      }: { userId: string; name: string; email: string; password: string }
+    ) => {
+      return userService.updateUser(userId, { name, email, password });
+    },
 
     login: async (_parent: any, args: any, context: any) => {
       const { res } = context;
@@ -140,6 +165,7 @@ export const resolvers = {
       }
     },
 
+    //? GPS
     sendGPSData: async (
       _: any,
       {
@@ -154,7 +180,7 @@ export const resolvers = {
         timestamp: string;
       }
     ) => {
-      return await GPS.createGPSData({
+      return await GPSModel.createGPSData({
         boiaId,
         latitude,
         longitude,
@@ -162,11 +188,16 @@ export const resolvers = {
       });
     },
 
+    //? Boias
     createBoia: async (
       _: any,
-      { name, description }: { name: string; description: string }
+      {
+        name,
+        description,
+        frequencyAtTime,
+      }: { name: string; description: string; frequencyAtTime: number }
     ) => {
-      return await boiaService.createBoia(name, description);
+      return await boiaService.createBoia(name, description, frequencyAtTime);
     },
 
     updateBoia: async (
@@ -175,11 +206,23 @@ export const resolvers = {
         boiaId,
         name,
         description,
-      }: { boiaId: string; name?: string; description?: string }
+        frequencyAtTime,
+      }: {
+        boiaId: string;
+        name?: string;
+        description?: string;
+        frequencyAtTime?: number;
+      }
     ) => {
-      const updateData: Partial<{ name: string; description: string }> = {};
+      const updateData: Partial<{
+        name: string;
+        description: string;
+        frequencyAtTime: number;
+      }> = {};
       if (name) updateData.name = name;
       if (description) updateData.description = description;
+      if (frequencyAtTime !== undefined)
+        updateData.frequencyAtTime = frequencyAtTime;
 
       return await boiaService.updateBoia(boiaId, updateData);
     },

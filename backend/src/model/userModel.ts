@@ -27,6 +27,14 @@ export class UserModelClass {
     return await UserModel.create(user);
   }
 
+  async updateUser(userId: string, updateUser: Partial<IUser>) {
+    return await UserModel.findByIdAndUpdate(
+      userId,
+      updateUser,
+      { new: true } //* Para retornar o documento atualizado (não o antigo)
+    );
+  }
+
   async getAllUsers() {
     return await UserModel.find({ isDeleted: false });
   }
