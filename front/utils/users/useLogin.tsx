@@ -1,4 +1,5 @@
 import { api } from "../../api/api";
+import ToastService from "../../services/alerts/alert";
 import { GraphQLResponse } from "../../types/GraphQLError.type";
 import { LoginResponse } from "../../types/LoginResponse.type";
 
@@ -22,7 +23,7 @@ export const useLogin = async (email: string, password: string) => {
     });
 
     if (response.data.errors) {
-      alert(response.data.errors[0].message);
+      ToastService.error("Erro", response.data.errors[0].message);
       return null;
     }
 

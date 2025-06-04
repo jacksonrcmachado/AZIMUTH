@@ -17,6 +17,7 @@ import { useEffect } from 'react';
 import { Ionicons } from '@expo/vector-icons';
 import { useLogin } from '../utils/users/useLogin';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import ToastService from '../services/alerts/alert';
 
 export default function Login({ navigation }: { navigation: any }) {
   const [showPassword, setShowPassword] = useState(false);
@@ -27,7 +28,7 @@ export default function Login({ navigation }: { navigation: any }) {
 
   const handleLogin = async () => {
     if (!email || !password) {
-      alert("Por favor, preencha todos os campos.");
+      ToastService.info("Informação","Por favor, preencha todos os campos.");
       return;
     }
 
@@ -43,7 +44,7 @@ export default function Login({ navigation }: { navigation: any }) {
       navigation.replace("Home");
     } catch (error) {
       console.error("Erro ao fazer login:", error);
-      alert("Erro ao fazer login");
+      ToastService.error("Erro","Erro ao fazer login");
     }
   };
   
