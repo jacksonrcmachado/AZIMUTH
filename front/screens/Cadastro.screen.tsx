@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { View, Text, TextInput, StyleSheet, TouchableOpacity, ScrollView, SafeAreaView, Platform, StatusBar, ImageBackground, KeyboardAvoidingView } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useCreateUser } from '../utils/users/useCreateUser';
+import ToastService from '../services/alerts/alert';
 
 export default function Cadastro({ navigation }: { navigation: any }) {
   const [showSenha, setShowSenha] = useState(false);
@@ -15,11 +16,15 @@ export default function Cadastro({ navigation }: { navigation: any }) {
   const handleCadastro = async () => {
 
     if (!name && !email && !password) {
-      alert("Por favor, preencha todos os campos antes de enviar.");
+      // alert("Por favor, preencha todos os campos antes de enviar.");
+      ToastService.info(
+        "Informação",
+        "Por favor, preencha todos os campos antes de enviar."
+      );
       return;
     }
     if (password !== confirmedPassword) {
-      alert("As senhas não coincidem. Por favor, tente novamente.");
+      ToastService.info("Informação","As senhas não coincidem. Por favor, tente novamente.");
       return;
     }
 
@@ -35,14 +40,10 @@ export default function Cadastro({ navigation }: { navigation: any }) {
         return result;
       }
 
-      alert(
-        `Usuário ${result!.email}  criado com sucesso! \n`
+      ToastService.success(
+        "Sucesso!",
+        `Usuário ${result!.email}  criado com sucesso!`
       );
-
-      // Pode navegar para a tela de login
-      navigation.replace("Login");
-      
-
 
       //? Pode Navegar para a tela de login ou outra tela depois do criar o user
       navigation.replace("Login");

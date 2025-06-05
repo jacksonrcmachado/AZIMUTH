@@ -32,12 +32,3 @@ async function startServer() {
 }
 
 startServer().catch((err) => console.error("Error starting server:", err));
-
-// app.get('/', (req, res) => {
-//   res.send('Hello from backend!');
-// });
-
-// const PORT = process.env.PORT || 3000;
-// app.listen(PORT, () => {
-//   console.log(`Servidor rodando na porta ${PORT}`);
-// });

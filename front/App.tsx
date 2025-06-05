@@ -7,6 +7,7 @@ import { store } from './store/store';
 import { Provider } from 'react-redux';
 import Cadastro from './screens/Cadastro.screen';
 import DrawerRoutes from './routes/DrawerRoutes';
+import Toast from "react-native-toast-message";
 
 const Stack = createNativeStackNavigator();
 
@@ -21,6 +22,7 @@ export default function App() {
           <Stack.Screen name="Main" component={DrawerRoutes} options={{ headerShown: false }} />
         </Stack.Navigator>
       </NavigationContainer>
+      <Toast />
     </Provider>
   );
 }
