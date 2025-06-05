@@ -41,7 +41,7 @@ export default function Login({ navigation }: { navigation: any }) {
       await AsyncStorage.setItem("token", result.token);
       const token = await AsyncStorage.getItem("token");
       
-      navigation.replace("Home");
+      navigation.replace("Main");
     } catch (error) {
       console.error("Erro ao fazer login:", error);
       ToastService.error("Erro","Erro ao fazer login");
