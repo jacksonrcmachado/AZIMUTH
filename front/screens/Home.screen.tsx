@@ -10,24 +10,18 @@ import { AppDispatch, RootState } from "../store/store"
 import getBuoys from '../services/asyncThunk/getBuoys';
 import LocationData from '../types/LocationData.type';
 import getLocationHistory from '../services/asyncThunk/getLocationHistory';
-import { clearHistory } from '../store/slices/map';
+import { clearHistory, setFilter0, setFilter15, setFilter3, setFilter7 } from '../store/slices/map';
+import removeDays from '../utils/removeDays';
 
 export default function HomeScreen({ navigation }: DefaultPagesProps) {
     const dispatch = useDispatch<AppDispatch>();
     const {
         locations,
         locationsHistory,
+        filterDays,
         loading,
         error
     } = useSelector((state: RootState) => state.maps);
-
-    const lines = [
-        { latitude: -23.55052, longitude: -46.633308 },
-        { latitude: -23.55052, longitude: -46.633308 + 0.01 },
-        { latitude: -23.55052 + 0.01, longitude: -46.633308 + 0.01 },
-        { latitude: -23.55052 + 0.01, longitude: -46.633308 },
-        { latitude: -23.55052, longitude: -46.633308 }
-    ]
 
     useEffect(() => {
         dispatch(getBuoys())
@@ -41,8 +35,9 @@ export default function HomeScreen({ navigation }: DefaultPagesProps) {
             latitudeDelta: 0.005,
             longitudeDelta: 0.005,
         }, 1000)
-        const startDate = new Date().toUTCString(); // Colocar depois com o filtro
-        const endDate = new Date().toUTCString(); 
+        const startDate = removeDays(new Date(), filterDays);
+        console.log(startDate)
+        const endDate = new Date().toUTCString();
         dispatch(getLocationHistory({ buoyId: buoy.buoy.id, startDate, endDate }));
     }
 
@@ -95,8 +90,22 @@ export default function HomeScreen({ navigation }: DefaultPagesProps) {
                 </MapView>
                 <View style={styles.filters}>
                     <Pressable onPress={() => dispatch(clearHistory())} style={({ pressed }) => [styles.clearHistory, { opacity: pressed ? 0.6 : 1 }]}>
-                        <Text style={styles.clearHistoryText}>Limpar</Text>
+                        <Image source={require("../assets/close.png")} style={styles.image}></Image>
                     </Pressable>
+                    <View style={styles.dateSelect}>
+                        <Pressable onPress={() => dispatch(setFilter0())} style={({ pressed }) => [filterDays === 0 ? styles.filterSelected : styles.filter, { opacity: pressed ? 0.6 : 1 }]}>
+                            <Text style={styles.filterText}>Hoje</Text>
+                        </Pressable>
+                        <Pressable onPress={() => dispatch(setFilter3())} style={({ pressed }) => [filterDays === 3 ? styles.filterSelected : styles.filter, { opacity: pressed ? 0.6 : 1 }]}>
+                            <Text style={styles.filterText}>3</Text>
+                        </Pressable>
+                        <Pressable onPress={() => dispatch(setFilter7())} style={({ pressed }) => [filterDays === 7 ? styles.filterSelected : styles.filter, { opacity: pressed ? 0.6 : 1 }]}>
+                            <Text style={styles.filterText}>7</Text>
+                        </Pressable>
+                        <Pressable onPress={() => dispatch(setFilter15())} style={({ pressed }) => [filterDays === 15 ? styles.filterSelected : styles.filter, { opacity: pressed ? 0.6 : 1 }]}>
+                            <Text style={styles.filterText}>15</Text>
+                        </Pressable>
+                    </View>
                     <Pressable onPress={() => console.log("adicionar boia")} style={({ pressed }) => [styles.add, { opacity: pressed ? 0.6 : 1 }]}>
                         <Image source={require("../assets/add.png")} style={{ width: "100%", height: "100%" }} />
                     </Pressable>

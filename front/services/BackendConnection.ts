@@ -1,5 +1,5 @@
 import GpsData from "../types/backendResponses/GpsData";
-import SimpleBuoy from "../types/backendResponses/simpleBuoy";
+import SimpleBuoy from "../types/backendResponses/SimpleBuoy";
 import LocationData from "../types/LocationData.type";
 import convertSimpleBuoyToLocationDataLatest from "../utils/convertSimpleBuoyToLocationData";
 import extractLatLng from "../utils/extractLatLng";
@@ -67,7 +67,7 @@ class BackendConnection {
         return locationDataList;
     }
 
-    public static getLocationHistory(buoyId: number, startDate: string, endDate: string): { latitude: number, longitude: number}[] {
+    public static getLocationHistory(buoyId: string, startDate: string, endDate: string): { latitude: number, longitude: number}[] {
         const response: GpsData[] = [ // trocar isso pela chamada real
             {
                 _id: "1",

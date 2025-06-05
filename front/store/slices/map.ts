@@ -6,12 +6,14 @@ import getLocationHistory from "../../services/asyncThunk/getLocationHistory"
 interface MapState {
     locations: LocationData[]
     locationsHistory?: { latitude: number, longitude: number }[]
+    filterDays: number
     loading: boolean
     error: string | null
 }
 
 const initialState: MapState = {
     locations: [],
+    filterDays: 15,
     loading: true,
     error: null
 }
@@ -21,6 +23,22 @@ const mapSlice = createSlice({
     initialState,
     reducers: {
         clearHistory: (state) => {
+            state.locationsHistory = []
+        },
+        setFilter15: (state) => {
+            state.filterDays = 15
+            state.locationsHistory = []
+        },
+        setFilter7: (state) => {
+            state.filterDays = 7
+            state.locationsHistory = []
+        },
+        setFilter3: (state) => {
+            state.filterDays = 3
+            state.locationsHistory = []
+        },
+        setFilter0: (state) => {
+            state.filterDays = 0
             state.locationsHistory = []
         }
     },
@@ -52,5 +70,5 @@ const mapSlice = createSlice({
     }
 })
 
-export const { clearHistory } = mapSlice.actions
+export const { clearHistory, setFilter0, setFilter3, setFilter7, setFilter15 } = mapSlice.actions
 export default mapSlice.reducer
