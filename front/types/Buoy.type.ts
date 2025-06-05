@@ -1,5 +1,5 @@
 type Buoy = {
-    id: number;
+    id: string;
     name: string
     description: string;
     isDeleted: boolean;
