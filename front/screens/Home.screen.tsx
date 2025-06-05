@@ -1,5 +1,6 @@
 import DefaultPagesProps from '../types/DefaultPagesProps.type';
-import React, { useEffect, useRef } from 'react';
+
+import React, { useEffect, useRef, useState } from 'react';
 import { View, Pressable, Image, ScrollView, Text } from 'react-native';
 import styles from '../styles/screens/Home.styles';
 import Header from '../components/Header.component';
@@ -12,8 +13,10 @@ import LocationData from '../types/LocationData.type';
 import getLocationHistory from '../services/asyncThunk/getLocationHistory';
 import { clearHistory, setFilter0, setFilter15, setFilter3, setFilter7 } from '../store/slices/map';
 import removeDays from '../utils/removeDays';
+import AddBuoyModal from '../components/AddBuoyModal.component';
 
 export default function HomeScreen({ navigation }: DefaultPagesProps) {
+    const [isModalVisible, setIsModalVisible] = useState(false);
     const dispatch = useDispatch<AppDispatch>();
     const {
         locations,
@@ -43,6 +46,7 @@ export default function HomeScreen({ navigation }: DefaultPagesProps) {
 
     return (
         <>
+            <AddBuoyModal visible={isModalVisible} onClose={() => setIsModalVisible(false)} />
             <Header navigation={navigation} />
             <View style={styles.main}>
                 <MapView
@@ -106,7 +110,9 @@ export default function HomeScreen({ navigation }: DefaultPagesProps) {
                             <Text style={styles.filterText}>15</Text>
                         </Pressable>
                     </View>
-                    <Pressable onPress={() => console.log("adicionar boia")} style={({ pressed }) => [styles.add, { opacity: pressed ? 0.6 : 1 }]}>
+
+                    <Pressable onPress={() => setIsModalVisible(true)} style={({ pressed }) => [styles.add, { opacity: pressed ? 0.6 : 1 }]}>
+
                         <Image source={require("../assets/add.png")} style={{ width: "100%", height: "100%" }} />
                     </Pressable>
                 </View>

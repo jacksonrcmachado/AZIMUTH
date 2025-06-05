@@ -1,24 +1,76 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, StyleSheet, TouchableOpacity, ScrollView, SafeAreaView, Platform, StatusBar, ImageBackground, KeyboardAvoidingView } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import { useCreateUser } from '../utils/users/useCreateUser';
+import ToastService from '../services/alerts/alert';
 
 export default function Cadastro({ navigation }: { navigation: any }) {
   const [showSenha, setShowSenha] = useState(false);
   const [showConfirmSenha, setShowConfirmSenha] = useState(false);
 
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [confirmedPassword, setConfirmedPassword] = useState('');
+
+  const handleCadastro = async () => {
+
+    if (!name && !email && !password) {
+      // alert("Por favor, preencha todos os campos antes de enviar.");
+      ToastService.info(
+        "Informação",
+        "Por favor, preencha todos os campos antes de enviar."
+      );
+      return;
+    }
+    if (password !== confirmedPassword) {
+      ToastService.info("Informação","As senhas não coincidem. Por favor, tente novamente.");
+      return;
+    }
+
+    try {
+      const user = {
+        name: name,
+        email: email,
+        password: password,
+      };
+
+      const result = await useCreateUser(user);
+      if (result === true) {
+        return result;
+      }
+
+      ToastService.success(
+        "Sucesso!",
+        `Usuário ${result!.email}  criado com sucesso!`
+      );
+
+      //? Pode Navegar para a tela de login ou outra tela depois do criar o user
+      navigation.replace("Login");
+
+    } catch (error) {
+      console.error("Erro ao criar usuário:", error);
+      alert("Erro ao criar usuário");
+    }
+  }
+
   return (
     <ImageBackground
-      source={require('../assets/fundo.png')}
+      source={require("../assets/fundo.png")}
       style={styles.background}
     >
       <SafeAreaView style={styles.safeArea}>
         <KeyboardAvoidingView
           style={{ flex: 1 }}
-          behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-          keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : 20}
+          behavior={Platform.OS === "ios" ? "padding" : "height"}
+          keyboardVerticalOffset={Platform.OS === "ios" ? 0 : 20}
         >
           <ScrollView
-            contentContainerStyle={{ flexGrow: 1, justifyContent: 'center', padding: 20 }}
+            contentContainerStyle={{
+              flexGrow: 1,
+              justifyContent: "center",
+              padding: 20,
+            }}
             keyboardShouldPersistTaps="handled"
             showsVerticalScrollIndicator={false}
           >
@@ -31,45 +83,81 @@ export default function Cadastro({ navigation }: { navigation: any }) {
 
               <View style={styles.inlineText}>
                 <Text style={styles.grayText}>Já tem uma conta? </Text>
-                <TouchableOpacity onPress={() => navigation.replace('Login')}>
+                <TouchableOpacity onPress={() => navigation.replace("Login")}>
                   <Text style={styles.linkText}>Entrar</Text>
                 </TouchableOpacity>
               </View>
 
-              <TextInput style={styles.input} placeholder="Nome Completo" />
-              <TextInput style={styles.input} placeholder="Email" keyboardType="email-address" />
-              <TextInput style={styles.input} placeholder="Data de Aniversário" />
-              <TextInput style={styles.input} placeholder="Número de Telefone" keyboardType="phone-pad" />
+              <TextInput
+                style={styles.input}
+                placeholder="Nome Completo"
+                value={name}
+                onChangeText={setName}
+              />
+              <TextInput
+                style={styles.input}
+                placeholder="Email"
+                value={email}
+                keyboardType="email-address"
+                onChangeText={setEmail}
+              />
+              <TextInput
+                style={styles.input}
+                placeholder="Data de Aniversário"
+              />
+              <TextInput
+                style={styles.input}
+                placeholder="Número de Telefone"
+                keyboardType="phone-pad"
+              />
 
               <View style={styles.inputContainer}>
                 <TextInput
                   style={styles.input}
                   placeholder="Criar Senha"
+                  value={password}
+                  onChangeText={setPassword}
                   secureTextEntry={!showSenha}
                 />
                 <TouchableOpacity
                   style={styles.eyeButton}
                   onPress={() => setShowSenha(!showSenha)}
                 >
-                  <Ionicons name={showSenha ? "eye" : "eye-off"} size={24} color="gray" />
+                  <Ionicons
+                    name={showSenha ? "eye" : "eye-off"}
+                    size={24}
+                    color="gray"
+                  />
                 </TouchableOpacity>
               </View>
 
-              <View style={[styles.inputContainer, { marginBottom: 8 }, { marginTop: -20 }]}>
+              <View
+                style={[
+                  styles.inputContainer,
+                  { marginBottom: 8 },
+                  { marginTop: -20 },
+                ]}
+              >
                 <TextInput
                   style={styles.input}
                   placeholder="Confirmar Senha"
                   secureTextEntry={!showConfirmSenha}
+                  value={confirmedPassword}
+                  onChangeText={setConfirmedPassword}
                 />
                 <TouchableOpacity
                   style={styles.eyeButton}
                   onPress={() => setShowConfirmSenha(!showConfirmSenha)}
                 >
-                  <Ionicons name={showConfirmSenha ? "eye" : "eye-off"} size={24} color="gray" />
+                  <Ionicons
+                    name={showConfirmSenha ? "eye" : "eye-off"}
+                    size={24}
+                    color="gray"
+                  />
                 </TouchableOpacity>
               </View>
 
-              <TouchableOpacity style={styles.button}>
+              <TouchableOpacity style={styles.button} onPress={handleCadastro}>
                 <Text style={styles.buttonText}>Entrar</Text>
               </TouchableOpacity>
             </View>
