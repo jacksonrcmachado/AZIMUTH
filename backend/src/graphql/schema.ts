@@ -47,6 +47,7 @@ export const typeDefs = gql`
     # Boias
     getGPSDataByBoia(boiaId: String!): [GPSData]
     getAllBoias: [Boia]
+    getFrequencyByBoia(boiaId: String!): Float
 
     # GPS
     getGPSDataByBoiaInRange(
@@ -59,7 +60,12 @@ export const typeDefs = gql`
   type Mutation {
     # Usuários
     createUser(name: String, email: String, password: String): User
-    updateUser(userId: String!, name: String, email: String, password: String): User
+    updateUser(
+      userId: String!
+      name: String
+      email: String
+      password: String
+    ): User
     login(email: String!, password: String!): AuthPayload!
 
     # GPS
@@ -99,9 +105,13 @@ export const resolvers = {
     getAllBoias: async (_: any, __: any) => {
       return await boiaModel.getAllBoias();
     },
-
     getGPSDataByBoia: async (_: any, args: { boiaId: string }) => {
       return await GPSModel.getGPSDataByBoiaId(args.boiaId);
+    },
+    getFrequencyByBoia: async (_: any, { boiaId }: { boiaId: string }) => {
+      const boia = await boiaModel.getBoiaById(boiaId);
+      if (!boia) throw new Error("Boia não encontrada");
+      return boia.frequencyAtTime;
     },
 
     //? GPS
