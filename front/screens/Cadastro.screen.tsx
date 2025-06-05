@@ -75,9 +75,6 @@ export default function Cadastro({ navigation }: { navigation: any }) {
             showsVerticalScrollIndicator={false}
           >
             <View style={styles.container}>
-              <TouchableOpacity onPress={() => navigation.goBack()}>
-                <Ionicons name="arrow-back" size={24} color="black" />
-              </TouchableOpacity>
 
               <Text style={styles.title}>Cadastro</Text>
 
@@ -100,15 +97,6 @@ export default function Cadastro({ navigation }: { navigation: any }) {
                 value={email}
                 keyboardType="email-address"
                 onChangeText={setEmail}
-              />
-              <TextInput
-                style={styles.input}
-                placeholder="Data de Aniversário"
-              />
-              <TextInput
-                style={styles.input}
-                placeholder="Número de Telefone"
-                keyboardType="phone-pad"
               />
 
               <View style={styles.inputContainer}>
@@ -182,6 +170,7 @@ const styles = StyleSheet.create({
         borderBottomLeftRadius: 20,
         borderBottomRightRadius: 20,
         margin: 5,
+        marginTop: 220
     },
     background: {
         flex: 1,
@@ -191,7 +180,8 @@ const styles = StyleSheet.create({
     title: {
         fontSize: 32,
         fontWeight: 'bold',
-        marginVertical: 16,
+        marginTop: 0,
+        marginBottom: 10
     },
     inlineText: {
         flexDirection: 'row',

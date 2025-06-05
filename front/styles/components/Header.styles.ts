@@ -1,22 +1,22 @@
-import { StyleSheet } from 'react-native';
+import { StyleSheet, StatusBar, Platform } from 'react-native';
 
 const styles = StyleSheet.create({
     header: {
         position: "relative",
         backgroundColor: "#fff",
-        height: 80,
+        height: 95,
         display: "flex",
         flexDirection: "row",
         justifyContent: "space-between",
-        alignItems: "center",
+        alignItems: 'flex-start',
         padding: 10,
-        paddingTop: 35
+        paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 50,
     },
     logo: {
         display: "flex",
         justifyContent: "center",
-        height: 40,
-        width: 110,
+        height: 50,
+        width: 140,
     },
     buttons: {
         zIndex: 3,
@@ -26,6 +26,9 @@ const styles = StyleSheet.create({
         justifyContent: "center",
         alignItems: "center",
         gap: 5,
+        padding: 10,
+        paddingTop: 20,
+        backgroundColor: "transparent",
     },
     line: {
         width: 20,

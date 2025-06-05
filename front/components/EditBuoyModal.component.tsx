@@ -17,7 +17,7 @@ export default function AddBuoyModal({ visible, onClose, buoyName }: Props) {
 
   return (
     <Modal
-      animationType="fade"
+      animationType="slide"
       transparent
       visible={visible}
       onRequestClose={onClose}
