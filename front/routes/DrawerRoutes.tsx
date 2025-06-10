@@ -5,7 +5,7 @@ import { Ionicons } from '@expo/vector-icons';
 import Home from '../screens/Home.screen';
 import Report from '../screens/Report.screen';
 import Perfil from '../screens/Perfil.screen';
-import LogoffBtn from '../styles/components/LogoffBtn';
+import LogoffBtn from '../components/LogoffBtn';
 
 const Drawer = createDrawerNavigator();
 

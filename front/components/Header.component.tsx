@@ -1,6 +1,7 @@
 import { Button, Image, Pressable, Text, TouchableOpacity, View, StatusBar, Platform } from "react-native";
 import DefaultPagesProps from "../types/DefaultPagesProps.type";
 import styles from "../styles/components/Header.styles";
+import { Ionicons } from '@expo/vector-icons';
 
 function Header({ navigation }: DefaultPagesProps) {
     function logout() {
@@ -19,12 +20,10 @@ function Header({ navigation }: DefaultPagesProps) {
             />
             <View style={styles.header}>
                 <Pressable style={styles.logo} onPress={() => navigation.navigate("Home")}>
-                    <Image source={require("../assets/logo.png")} style={{ width: "100%", height: "50%" }} />
+                    <Image source={require("../assets/logo-branca.png")} style={{ width: "100%", height: "50%" }} />
                 </Pressable>
                 <Pressable style={styles.buttons} onPress={() => navigation.openDrawer()}>
-                    <View style={styles.line} />
-                    <View style={styles.line} />
-                    <View style={styles.line} />
+                    <Ionicons name="menu" size={27} color={"white"} />
                 </Pressable>
             </View>
         </>

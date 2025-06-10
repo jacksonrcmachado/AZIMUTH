@@ -3,7 +3,7 @@ import { StyleSheet, StatusBar, Platform } from 'react-native';
 const styles = StyleSheet.create({
     header: {
         position: "relative",
-        backgroundColor: "#fff",
+        backgroundColor: "#1e3c72",
         height: 95,
         display: "flex",
         flexDirection: "row",
@@ -11,24 +11,28 @@ const styles = StyleSheet.create({
         alignItems: 'flex-start',
         padding: 10,
         paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 50,
+
+        borderBottomWidth: 2,
+        borderColor: 'rgba(61, 61, 61, 0.86)',
     },
     logo: {
         display: "flex",
         justifyContent: "center",
         height: 50,
         width: 140,
+        top: -5,
     },
     buttons: {
         zIndex: 3,
         width: 40,
-        height: 40,
+        height: 35,
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
         gap: 5,
-        padding: 10,
-        paddingTop: 20,
-        backgroundColor: "transparent",
+        backgroundColor: "rgba(255, 255, 255, 0.2)",
+        borderRadius: 12
+
     },
     line: {
         width: 20,
