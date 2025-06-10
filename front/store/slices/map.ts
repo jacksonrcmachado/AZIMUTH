@@ -44,24 +44,31 @@ const mapSlice = createSlice({
     },
     extraReducers: (builder) => {
         builder.addCase(getBuoys.pending, (state) => {
-            state.loading = true
-            state.error = null
+          state.loading = true;
+          state.error = null;
         }),
-        builder.addCase(getBuoys.fulfilled, (state, action: PayloadAction<LocationData[]>) => {
-            state.locations = action.payload
-            state.loading = false
-            state.error = null
-        }),
-        builder.addCase(getBuoys.rejected, (state) => {
-            state.locations = []
-            state.loading = false
-            state.error = "Error fetching buoys"
-        }),
-        builder.addCase(getLocationHistory.fulfilled, (state, action: PayloadAction<{latitude: number, longitude: number}[]>) => {
-            state.locationsHistory = action.payload
-            state.loading = false
-            state.error = null
-        })
+          builder.addCase(
+            getBuoys.fulfilled,
+            (state, action: PayloadAction<LocationData[]>) => {
+              state.locations = action.payload;
+              state.loading = false;
+              state.error = null;
+            }
+          ),
+          builder.addCase(getBuoys.rejected, (state) => {
+            state.locations = [];
+            state.loading = false;
+            state.error = "Error fetching buoys";
+          }),
+          builder.addCase(getLocationHistory.fulfilled, (state, action) => {
+            if (action.payload) {
+              state.locationsHistory = action.payload;
+            } else {
+              state.locationsHistory = [];
+            }
+            state.loading = false;
+            state.error = null;
+          });
         builder.addCase(getLocationHistory.rejected, (state) => {
             state.locationsHistory = []
             state.loading = false

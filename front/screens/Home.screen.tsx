@@ -26,7 +26,7 @@ export default function HomeScreen({ navigation }: DefaultPagesProps) {
         error
     } = useSelector((state: RootState) => state.maps);
 
-    useEffect(() => {
+    useEffect(() => {        
         dispatch(getBuoys())
     }, [])
 
@@ -45,83 +45,143 @@ export default function HomeScreen({ navigation }: DefaultPagesProps) {
     }
 
     return (
-        <>
-            <AddBuoyModal visible={isModalVisible} onClose={() => setIsModalVisible(false)} />
-            <Header navigation={navigation} />
-            <View style={styles.main}>
-                <MapView
-                    style={styles.map}
-                    ref={mapRef}
-                    initialRegion={{
-                        latitude: -23.55052,
-                        longitude: -46.633308,
-                        latitudeDelta: 0.0922,
-                        longitudeDelta: 0.0421,
-                    }}
-                    showsPointsOfInterest={false}
-                    customMapStyle={[
-                        {
-                            featureType: 'poi',
-                            stylers: [{ visibility: 'off' }],
-                        },
-                        {
-                            featureType: 'transit',
-                            stylers: [{ visibility: 'off' }],
-                        },
-                    ]}
-                >
-                    {locations.map((location) => (
-                        <Marker
-                            key={location.buoy.id}
-                            coordinate={location}
-                            title={location.buoy.name}
-                            description={location.buoy.description}
-                            style={{ zIndex: 2, opacity: !location.buoy.isDeleted ? 1 : 0.5 }}
-                            icon={
-                                !location.buoy.isDeleted ? require("../assets/ativo.png") : require("../assets/inativo.png")
-                            }
-                            onPress={() => focusBuoy(location)}
-                        >
-                        </Marker>
-                    ))}
-                    {locationsHistory && (
-                        <Polyline
-                            coordinates={locationsHistory}
-                            strokeColor="red"
-                            strokeWidth={2}
-                        />
-                    )}
-                </MapView>
-                <View style={styles.filters}>
-                    <Pressable onPress={() => dispatch(clearHistory())} style={({ pressed }) => [styles.clearHistory, { opacity: pressed ? 0.6 : 1 }]}>
-                        <Image source={require("../assets/close.png")} style={styles.image}></Image>
-                    </Pressable>
-                    <View style={styles.dateSelect}>
-                        <Pressable onPress={() => dispatch(setFilter0())} style={({ pressed }) => [filterDays === 0 ? styles.filterSelected : styles.filter, { opacity: pressed ? 0.6 : 1 }]}>
-                            <Text style={styles.filterText}>Hoje</Text>
-                        </Pressable>
-                        <Pressable onPress={() => dispatch(setFilter3())} style={({ pressed }) => [filterDays === 3 ? styles.filterSelected : styles.filter, { opacity: pressed ? 0.6 : 1 }]}>
-                            <Text style={styles.filterText}>3</Text>
-                        </Pressable>
-                        <Pressable onPress={() => dispatch(setFilter7())} style={({ pressed }) => [filterDays === 7 ? styles.filterSelected : styles.filter, { opacity: pressed ? 0.6 : 1 }]}>
-                            <Text style={styles.filterText}>7</Text>
-                        </Pressable>
-                        <Pressable onPress={() => dispatch(setFilter15())} style={({ pressed }) => [filterDays === 15 ? styles.filterSelected : styles.filter, { opacity: pressed ? 0.6 : 1 }]}>
-                            <Text style={styles.filterText}>15</Text>
-                        </Pressable>
-                    </View>
-
-                    <Pressable onPress={() => setIsModalVisible(true)} style={({ pressed }) => [styles.add, { opacity: pressed ? 0.6 : 1 }]}>
-
-                        <Image source={require("../assets/add.png")} style={{ width: "100%", height: "100%" }} />
-                    </Pressable>
-                </View>
-                <ScrollView style={styles.buoys} contentContainerStyle={{ paddingBottom: 60 }}>
-                    {locations.map((location) => (
-                        <BuoyComponent key={location.buoy.id} navigation={navigation} locationData={location} focus={focusBuoy} />
-                    ))}
-                </ScrollView>
+      <>
+        <AddBuoyModal
+          visible={isModalVisible}
+          onClose={() => setIsModalVisible(false)}
+          onCreated={() => {
+            dispatch(getBuoys()); // atualiza lista
+            setIsModalVisible(false); // fecha modal
+          }}
+        />
+        <Header navigation={navigation} />
+        <View style={styles.main}>
+          <MapView
+            style={styles.map}
+            ref={mapRef}
+            initialRegion={{
+              latitude: -23.55052,
+              longitude: -46.633308,
+              latitudeDelta: 0.0922,
+              longitudeDelta: 0.0421,
+            }}
+            showsPointsOfInterest={false}
+            customMapStyle={[
+              {
+                featureType: "poi",
+                stylers: [{ visibility: "off" }],
+              },
+              {
+                featureType: "transit",
+                stylers: [{ visibility: "off" }],
+              },
+            ]}
+          >
+            {locations.map((location) => (
+              <Marker
+                key={location.buoy.id}
+                coordinate={location}
+                title={location.buoy.name}
+                description={location.buoy.description}
+                style={{
+                  zIndex: 2,
+                  opacity: !location.buoy.isDeleted ? 1 : 0.5,
+                }}
+                icon={
+                  !location.buoy.isDeleted
+                    ? require("../assets/ativo.png")
+                    : require("../assets/inativo.png")
+                }
+                onPress={() => focusBuoy(location)}
+              ></Marker>
+            ))}
+            {locationsHistory && (
+              <Polyline
+                coordinates={locationsHistory}
+                strokeColor="red"
+                strokeWidth={2}
+              />
+            )}
+          </MapView>
+          <View style={styles.filters}>
+            <Pressable
+              onPress={() => dispatch(clearHistory())}
+              style={({ pressed }) => [
+                styles.clearHistory,
+                { opacity: pressed ? 0.6 : 1 },
+              ]}
+            >
+              <Image
+                source={require("../assets/close.png")}
+                style={styles.image}
+              ></Image>
+            </Pressable>
+            <View style={styles.dateSelect}>
+              <Pressable
+                onPress={() => dispatch(setFilter0())}
+                style={({ pressed }) => [
+                  filterDays === 0 ? styles.filterSelected : styles.filter,
+                  { opacity: pressed ? 0.6 : 1 },
+                ]}
+              >
+                <Text style={styles.filterText}>Hoje</Text>
+              </Pressable>
+              <Pressable
+                onPress={() => dispatch(setFilter3())}
+                style={({ pressed }) => [
+                  filterDays === 3 ? styles.filterSelected : styles.filter,
+                  { opacity: pressed ? 0.6 : 1 },
+                ]}
+              >
+                <Text style={styles.filterText}>3</Text>
+              </Pressable>
+              <Pressable
+                onPress={() => dispatch(setFilter7())}
+                style={({ pressed }) => [
+                  filterDays === 7 ? styles.filterSelected : styles.filter,
+                  { opacity: pressed ? 0.6 : 1 },
+                ]}
+              >
+                <Text style={styles.filterText}>7</Text>
+              </Pressable>
+              <Pressable
+                onPress={() => dispatch(setFilter15())}
+                style={({ pressed }) => [
+                  filterDays === 15 ? styles.filterSelected : styles.filter,
+                  { opacity: pressed ? 0.6 : 1 },
+                ]}
+              >
+                <Text style={styles.filterText}>15</Text>
+              </Pressable>
             </View>
-        </>
+
+            <Pressable
+              onPress={() => setIsModalVisible(true)}
+              style={({ pressed }) => [
+                styles.add,
+                { opacity: pressed ? 0.6 : 1 },
+              ]}
+            >
+              <Image
+                source={require("../assets/add.png")}
+                style={{ width: "100%", height: "100%" }}
+              />
+            </Pressable>
+          </View>
+          <ScrollView
+            style={styles.buoys}
+            contentContainerStyle={{ paddingBottom: 60 }}
+          >
+            {locations.map((location) => (
+              <BuoyComponent
+                key={location.buoy.id}
+                navigation={navigation}
+                locationData={location}
+                focus={focusBuoy}
+              />
+            ))}
+          </ScrollView>
+        </View>
+      </>
     );
 }
