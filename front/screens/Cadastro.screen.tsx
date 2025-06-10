@@ -146,7 +146,7 @@ export default function Cadastro({ navigation }: { navigation: any }) {
               </View>
 
               <TouchableOpacity style={styles.button} onPress={handleCadastro}>
-                <Text style={styles.buttonText}>Entrar</Text>
+                <Text style={styles.buttonText}>Cadastrar</Text>
               </TouchableOpacity>
             </View>
           </ScrollView>

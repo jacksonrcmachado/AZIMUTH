@@ -13,6 +13,7 @@ import styles from "../styles/components/Modal.styles";
 import ToastService from "../services/alerts/alert";
 import { updateBuoy } from "../utils/boias/updateBuoys";
 
+
 type Props = {
   visible: boolean;
   onClose: () => void;
@@ -66,7 +67,7 @@ export default function EditBuoyModal({
       onRequestClose={onClose}
     >
       <Pressable style={styles.overlay} onPress={onClose}>
-        <BlurView intensity={5} tint="dark" style={styles.blur}>
+        <BlurView intensity={6} tint="dark" style={styles.blur}>
           <Pressable
             style={styles.modalContainer}
             onPress={(e) => e.stopPropagation()}
@@ -97,7 +98,7 @@ export default function EditBuoyModal({
 
             <TextInput
               style={styles.input}
-              placeholder="Frequência (ms)"
+              placeholder="Frequênciao (ms)"
               placeholderTextColor="#a5a4a4"
               keyboardType="numeric"
               value={tempo}
@@ -105,7 +106,7 @@ export default function EditBuoyModal({
             />
 
             <Pressable style={styles.submitButton} onPress={handleUpdate}>
-              <Text style={styles.submitButtonText}>Atualizar</Text>
+              <Text style={styles.submitButtonText}>Salvar</Text>
             </Pressable>
           </Pressable>
         </BlurView>
