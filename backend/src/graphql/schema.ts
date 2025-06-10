@@ -237,4 +237,10 @@ export const resolvers = {
       return await boiaService.updateBoia(boiaId, updateData);
     },
   },
+  Boia: {
+    gpsData: async (parent: any) => {
+      // parent é a boia retornada na getAllBoias
+      return await GPSModel.getGPSDataByBoiaId(parent._id);
+    },
+  },
 };

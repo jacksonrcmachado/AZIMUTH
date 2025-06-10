@@ -50,7 +50,7 @@ export default function Cadastro({ navigation }: { navigation: any }) {
 
     } catch (error) {
       console.error("Erro ao criar usuário:", error);
-      alert("Erro ao criar usuário");
+      ToastService.error("Erro", "Erro ao criar usuário");
     }
   }
 

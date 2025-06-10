@@ -1,100 +1,106 @@
+import { api } from "../api/api";
 import GpsData from "../types/backendResponses/GpsData";
 import SimpleBuoy from "../types/backendResponses/SimpleBuoy";
+import { GraphQLResponse } from "../types/GraphQLError.type";
 import LocationData from "../types/LocationData.type";
 import convertSimpleBuoyToLocationDataLatest from "../utils/convertSimpleBuoyToLocationData";
 import extractLatLng from "../utils/extractLatLng";
 import sortByBuoyDate from "../utils/sortByBuoyDate";
+import ToastService from "./alerts/alert";
 
 class BackendConnection {
-    private static url: string = "";
+  private static url: string = "";
 
-    public static getBuoys(): LocationData[] {
-        const response: SimpleBuoy[] = [ // trocar isso pela chamada real
-            {
-                _id: "1",
-                name: "Boia 1",
-                description: "Boia de teste 1",
-                gpsData: [
-                    {
-                        _id: "1",
-                        boiaId: "1",
-                        timestamp: new Date().toISOString(),
-                        latitude: -23.55052,
-                        longitude: -46.633308
-                    },
-                    {
-                        _id: "2",
-                        boiaId: "1",
-                        timestamp: new Date("2024-04-24").toISOString(),
-                        latitude: -23.55052 + 0.001,
-                        longitude: -46.633308 + 0.001
-                    },
-                    {
-                        _id: "3",
-                        boiaId: "1",
-                        timestamp: new Date("2024-05-01").toISOString(),
-                        latitude: -23.55052 + 0.006,
-                        longitude: -46.633308 + 0.003
-                    }
-                ]
-            },
-            {
-                _id: "2",
-                name: "Boia 2",
-                description: "Boia de teste 2",
-                gpsData: [
-                    {
-                        _id: "4",
-                        boiaId: "2",
-                        timestamp: new Date().toISOString(),
-                        latitude: -23.55052 + 0.002,
-                        longitude: -46.633308 + 0.002
-                    },
-                    {
-                        _id: "5",
-                        boiaId: "2",
-                        timestamp: new Date("2024-04-25").toISOString(),
-                        latitude: -23.55052 + 0.003,
-                        longitude: -46.633308 + 0.003
-                    }
-                ]
+  public static async getBuoys(): Promise<LocationData[] | null> {
+    try {
+      const query = `
+        {
+          getAllBoias {
+            _id
+            name
+            description
+            frequencyAtTime
+            gpsData {
+              _id
+              boiaId
+              timestamp
+              latitude
+              longitude
             }
-        ]
-        const locationDataList = convertSimpleBuoyToLocationDataLatest(response);
-        if (!locationDataList) {
-            return [];
+          }
         }
-        return locationDataList;
-    }
+      `;
 
-    public static getLocationHistory(buoyId: string, startDate: string, endDate: string): { latitude: number, longitude: number}[] {
-        const response: GpsData[] = [ // trocar isso pela chamada real
-            {
-                _id: "1",
-                boiaId: "1",
-                timestamp: new Date().toISOString(),
-                latitude: -23.55052,
-                longitude: -46.633308
-            },
-            {
-                _id: "2",
-                boiaId: "1",
-                timestamp: new Date("2024-04-24").toISOString(),
-                latitude: -23.55052 + 0.001,
-                longitude: -46.633308 + 0.001
-            },
-            {
-                _id: "3",
-                boiaId: "1",
-                timestamp: new Date("2024-05-01").toISOString(),
-                latitude: -23.55052 + 0.006,
-                longitude: -46.633308 + 0.003
-            }
-        ]
-        const organizedList = sortByBuoyDate(response)
-        const latLngList = extractLatLng(organizedList)
-        return latLngList;
+      const response = await api.post<
+        GraphQLResponse<{ getAllBoias: SimpleBuoy[] }>
+      >("", {
+        query,
+      });
+
+      if (response.data.errors) {
+        ToastService.error("Erro", response.data.errors[0].message);
+        return null;
+      }      
+
+      const simpleBuoyList = response.data.data.getAllBoias;
+      const locationDataList =
+        convertSimpleBuoyToLocationDataLatest(simpleBuoyList);
+
+      return locationDataList || [];
+    } catch (error) {
+      console.error("Erro ao buscar boias:", error);
+      ToastService.error("Erro", "Não foi possível buscar as boias.");
+      return null;
     }
+  }
+  public static async getLocationHistory(
+    buoyId: string,
+    startDate: string,
+    endDate: string
+  ): Promise<{ latitude: number; longitude: number }[] | null> {
+    try {
+      const query = `
+            query ($boiaId: String!, $startDate: String!, $endDate: String!) {
+              getGPSDataByBoiaInRange(boiaId: $boiaId, startDate: $startDate, endDate: $endDate) {
+                _id
+                boiaId
+                timestamp
+                latitude
+                longitude
+              }
+            }
+          `;
+
+      const response = await api.post<
+        GraphQLResponse<{ getGPSDataByBoiaInRange: GpsData[] }>
+      >("", {
+        query,
+        variables: {
+          boiaId: buoyId,
+          startDate,
+          endDate,
+        },
+      });
+
+      if (response.data.errors) {
+        ToastService.error("Erro", response.data.errors[0].message);
+        return null;
+      }
+
+      const gpsDataList = response.data.data.getGPSDataByBoiaInRange;
+      const organizedList = sortByBuoyDate(gpsDataList);
+      const latLngList = extractLatLng(organizedList);
+
+      return latLngList;
+    } catch (error) {
+      console.error("Erro ao buscar histórico de localização:", error);
+      ToastService.error(
+        "Erro",
+        "Não foi possível buscar o histórico de localização."
+      );
+      return null;
+    }
+  }
 }
 
 export default BackendConnection;
