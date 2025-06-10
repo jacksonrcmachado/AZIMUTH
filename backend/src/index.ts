@@ -26,9 +26,10 @@ async function startServer() {
 
   await connectDB();
 
-  app.listen(3001, () => {
-    console.log(`Server running on http://localhost:3001${server.graphqlPath}`);
+  app.listen(3001, "0.0.0.0", () => {
+    console.log(`Server running on http://0.0.0.0:3001${server.graphqlPath}`);
   });
+  
 }
 
 startServer().catch((err) => console.error("Error starting server:", err));

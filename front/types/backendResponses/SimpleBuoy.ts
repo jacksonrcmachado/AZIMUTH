@@ -4,6 +4,7 @@ type SimpleBuoy = {
     "_id": string;
     "name": string;
     "description": string;
+    "frequencyAtTime": number;
     "gpsData": GpsData[]
 }
 
