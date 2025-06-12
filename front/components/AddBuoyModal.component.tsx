@@ -5,6 +5,9 @@ import { BlurView } from 'expo-blur';
 import styles from "../styles/components/Modal.styles";
 import ToastService from '../services/alerts/alert';
 import { createNewBuoys } from '../utils/boias/createNewBuoys';
+import { useDispatch } from 'react-redux';
+import { AppDispatch, RootState } from "../store/store"
+import getBuoys from '../services/asyncThunk/getBuoys';
 
 type Props = {
   visible: boolean;
@@ -16,6 +19,7 @@ export default function AddBuoyModal({ visible, onClose, onCreated }: Props) {
   const [nome, setNome] = useState('');
   const [descricao, setDescricao] = useState('');
   const [tempo, setTempo] = useState(0);
+  const dispatch = useDispatch<AppDispatch>();
 
   React.useEffect(() => {
     if (!visible) {
@@ -27,7 +31,7 @@ export default function AddBuoyModal({ visible, onClose, onCreated }: Props) {
 
   const handleCreateBuoy = async () => {
 
-    if (!nome || !descricao ) {
+    if (!nome || !descricao) {
       ToastService.info(
         "Informação",
         "Por favor, preencha todos os campos antes de enviar."
@@ -52,6 +56,8 @@ export default function AddBuoyModal({ visible, onClose, onCreated }: Props) {
         );
         onCreated();
       }
+
+      dispatch(getBuoys())
     } catch (error) {
       console.error("Erro ao criar boia:", error);
       ToastService.error("Erro", "Erro ao criar boia");

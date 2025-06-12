@@ -2,7 +2,7 @@ import axios from "axios";
 
 
 export const api = axios.create({
-  baseURL: "http://192.168.3.32:3001/graphql",
+  baseURL: "http://192.168.3.32:3001/graphql", // trocar para o ip que esta rodando o backend
   headers: {
     "Content-Type": "application/json",
     Accept: "application/json",
