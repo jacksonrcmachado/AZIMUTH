@@ -73,7 +73,6 @@ export const typeDefs = gql`
       boiaId: String!
       latitude: Float!
       longitude: Float!
-      timestamp: String!
     ): GPSData
 
     # Boias
@@ -182,19 +181,16 @@ export const resolvers = {
         boiaId,
         latitude,
         longitude,
-        timestamp,
       }: {
         boiaId: string;
         latitude: number;
         longitude: number;
-        timestamp: string;
       }
     ) => {
       return await GPSModel.createGPSData({
         boiaId,
         latitude,
         longitude,
-        timestamp,
       });
     },
 
