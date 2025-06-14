@@ -39,8 +39,7 @@ export default function HomeScreen({ navigation }: DefaultPagesProps) {
             longitudeDelta: 0.005,
         }, 1000)
         const startDate = removeDays(new Date(), filterDays);
-        console.log(startDate)
-        const endDate = new Date().toUTCString();
+        const endDate = new Date().toISOString();
         dispatch(getLocationHistory({ buoyId: buoy.buoy.id, startDate, endDate }));
     }
 
