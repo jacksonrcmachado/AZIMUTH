@@ -53,7 +53,7 @@ export default function DrawerRoutes() {
           ),
         }}
       />
-      <Drawer.Screen
+      {/* <Drawer.Screen
         name="Perfil"
         component={Perfil}
         options={{
@@ -61,7 +61,7 @@ export default function DrawerRoutes() {
             <Ionicons name="person" size={size} color={color} />
           ),
         }}
-      />
+      /> */}
     </Drawer.Navigator>
   );
 }
