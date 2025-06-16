@@ -56,8 +56,9 @@ class BackendConnection {
   public static async getLocationHistory(
     buoyId: string,
     startDate: string,
-    endDate: string
-  ): Promise<{ latitude: number; longitude: number }[] | null> {
+    endDate: string,
+    formated: boolean = true
+  ): Promise<{ latitude: number; longitude: number }[] | { _id: string, boiaId: string, latitude: number, longitude: number, timestamp: string}[] | null> {
     try {
       const query = `
             query ($boiaId: String!, $startDate: String!, $endDate: String!) {
@@ -89,6 +90,9 @@ class BackendConnection {
 
       const gpsDataList = response.data.data.getGPSDataByBoiaInRange;
       const organizedList = sortByBuoyDate(gpsDataList);
+
+      if (!formated) return organizedList
+
       const latLngList = extractLatLng(organizedList);
 
       return latLngList;
