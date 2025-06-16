@@ -1,23 +1,28 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import * as React from 'react';
+import { NavigationContainer } from '@react-navigation/native';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import Splash from './screens/Splash.screen';
+import Login from './screens/Login.screen';
+import { store } from './store/store';
+import { Provider } from 'react-redux';
+import Cadastro from './screens/Cadastro.screen';
+import DrawerRoutes from './routes/DrawerRoutes';
+import Toast from "react-native-toast-message";
+
+const Stack = createNativeStackNavigator();
 
 export default function App() {
   return (
-    <View style={styles.container}>
-      <Text>Abra o arquivo App.tsx para iniciar seus trabalhos no seu app!</Text>
-      <Text>Linha acrescentada para realizar testes!</Text>
-      <StatusBar style="auto" />
-    </View>
+    <Provider store={store}>
+      <NavigationContainer>
+        <Stack.Navigator initialRouteName='Splash'>
+          <Stack.Screen name="Login" component={Login} options={{ headerShown: false, gestureEnabled: true }} />
+          <Stack.Screen name="Splash" component={Splash} />
+          <Stack.Screen name="Cadastro" component={Cadastro} options={{ headerShown: false }} />
+          <Stack.Screen name="Main" component={DrawerRoutes} options={{ headerShown: false }} />
+        </Stack.Navigator>
+      </NavigationContainer>
+      <Toast />
+    </Provider>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
-// comentário para testar actions no github
-// mais comentários....
