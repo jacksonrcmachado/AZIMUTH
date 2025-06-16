@@ -88,6 +88,34 @@ Confira abaixo a documentação completa do projeto, que inclui informações de
 ![Descrição da imagem](documentation/burndown-sprint01.png)
 
 <br>
+
+## Backlog Sprint 02
+<br>
+
+![Descrição da imagem](documentation/backlog-sprint02.png)
+
+<br>
+
+## Burndown Sprint 02
+<br>
+
+![Descrição da imagem](documentation/burndown-sprint02.png)
+
+<br>
+
+## Backlog Sprint 03
+<br>
+
+![Descrição da imagem](documentation/backlog-sprint03.png)
+
+<br>
+
+## Burndown Sprint 03
+<br>
+
+![Descrição da imagem](documentation/burndown-sprint03.png)
+
+<br>
 <hr>
 
 <div align="center">
